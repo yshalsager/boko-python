@@ -25,11 +25,6 @@ source = Path('input.epub').read_bytes()
 output = boko.convert(source, 'epub', 'kfx')
 ```
 
-```python
-convert(data: bytes, from_format: str, to_format: str) -> bytes
-convert_file(input_path: str | PathLike[str], output_path: str | PathLike[str]) -> None
-```
-
 | Format | Input | Output |
 | --- | --- | --- |
 | EPUB 2/3 (`epub`) | yes | yes |
@@ -49,7 +44,6 @@ symlink and hardlink aliases, raises `ValueError`. Output extensions are `.epub`
 
 For inspection, repeated reads, or export options, use the `Book` API below. Parsing,
 conversion, chapter loading/rendering, link resolution, and optimization release the GIL.
-The core uses parallel chapter compilation and image optimization without its CLI dependencies.
 
 - Invalid/unsupported formats and malformed books raise `ValueError`.
 - DRM-protected books raise `PermissionError`; no decryption is provided.
@@ -61,7 +55,6 @@ The core uses parallel chapter compilation and image optimization without its CL
 
 Regular CPython 3.11+ is supported. Wheels use `abi3-py311` and do not require Rust
 to install. Free-threaded Python, PyPy, and GraalPy wheels are not currently built.
-The wrapper has its own version (initially 0.1.0), independent of the core crate.
 
 ## Untrusted books
 
@@ -99,7 +92,7 @@ Use `Book.from_bytes(data, format)` for in-memory inputs. `Book.open(path,
 format=None)` accepts strings and `PathLike` objects, inferring formats from the
 file extension unless supplied explicitly. Use a `with` statement or `close()` to
 release the file and caches. `closed` reports the state; operations on a closed
-book raise `ValueError`. Context managers do not suppress exceptions.
+book raise `ValueError`.
 
 ### Inspection and assets
 
@@ -168,9 +161,8 @@ Sources contain `chapter_id` and `node_id`. Targets are discriminated by `kind`:
 
 `export(format, *, normalize=None, compression_level=None)` returns bytes.
 `normalize` applies only to EPUB/AZW3; `compression_level` applies only to EPUB
-and must be 1–9 (the current ZIP backend rejects level 0). Incompatible options raise `ValueError`. KFX input is normalized
-automatically where needed. Markdown wrapping is not exposed because the core's
-`line_width` field is reserved and currently ignored.
+and must be 1–9 (the current ZIP backend rejects level 0). Incompatible options raise
+`ValueError`. KFX input is normalized automatically where needed.
 
 `optimize()` explicitly mutates the book using Boko's default image pass and
 returns `passes`, `assets_changed`, and `bytes_saved`. **This is lossy image
@@ -182,8 +174,6 @@ Previously returned snapshots still describe the pre-optimization state.
 Read-only operations may run concurrently on one book. `clear_cache()`, `close()`,
 `sections()`, and `optimize()` require exclusive access: do not run them concurrently with other
 operations on the same book. PyO3 rejects conflicting borrows rather than waiting.
-File-like/streaming adapters, CLI scripts, metadata editing, mutable IR, and unstable
-KFX tooling are not part of this API.
 
 ## Development
 
@@ -198,14 +188,8 @@ uv run python -m unittest discover -s tests -v       # run tests
 mise run build                                      # uv build: wheel + source archive
 ```
 
-uv manages `.venv` and invokes maturin through `pyproject.toml`; no manual
-activation or maturin installation is needed. Rust sources and Cargo files are
-included in uv's cache keys, so subsequent `uv sync` or `uv run` rebuilds changed
-code. `uv.lock` records the Python project resolution.
-
-The tests generate their own EPUB and MOBI inputs, covering every supported
-format, nested navigation, Unicode, DRM, malformed inputs, and concurrent calls.
-They need no upstream checkout or test-time downloads.
+uv manages `.venv` and builds the extension with maturin; no manual activation or
+maturin installation is needed.
 
 Additional Rust checks: `cargo fmt --check`,
 `cargo clippy --locked --all-targets -- -D warnings`, and `cargo test --locked --lib`.
@@ -214,32 +198,19 @@ For Rust's embedded-interpreter test, relocatable Python installations may need
 `LD_LIBRARY_PATH` so the test executable can load the Python shared library.
 Importing the extension does not require these settings.
 
-Release artifacts go to `dist/`, with the wheel built from the source archive.
-Use release builds when measuring performance.
-
+Build artifacts go to `dist/`. Use release builds when measuring performance.
 Local Linux wheels are not necessarily portable: use manylinux containers or
-maturin's compatible Zig support for release builds.
+maturin's compatible Zig support for distribution.
 
-## Release setup
+## Releases
 
-The workflow in `.github/workflows/python.yml` checks Rust, builds wheels for
-Linux x86_64/ARM64, macOS x86_64/ARM64, and Windows x86_64, tests each wheel on
-Python 3.11 and 3.15, and rebuilds/tests the source distribution.
+CI checks Rust, tests wheels for Linux x86_64/ARM64, macOS x86_64/ARM64, and Windows
+x86_64 on Python 3.11 and 3.15, and rebuilds/tests the source distribution.
+Pushing a `v<version>` tag matching `Cargo.toml` publishes the tested artifacts to
+PyPI and GitHub.
 
-Publishing requires a pushed `v<version>` tag matching `Cargo.toml` and successful
-checks/builds. Pull requests, branch pushes, and manual runs do not publish.
-Before the first release:
-
-1. Confirm that `boko-ebook` is available; the name is not reserved by this repo.
-2. Configure the PyPI pending/trusted publisher for this repository, workflow
-   `python.yml`, and GitHub environment `pypi`.
-3. Create a protected `pypi` environment with required reviewers and tag restrictions.
-4. Validate all platform builds and rehearse on TestPyPI before approving production.
-   TestPyPI requires its own publisher or externally configured credentials:
-   `uv publish --publish-url https://test.pypi.org/legacy/ dist/*`.
-
-OIDC publishing requires no long-lived PyPI token. The version in `Cargo.toml` is
-the single source for Python metadata; keep `Cargo.lock` committed for release builds.
+The PyPI Trusted Publisher must use workflow `publish.yml` and environment `pypi`.
+Protect that GitHub environment with required reviewers and tag restrictions before publishing.
 
 ## License
 
