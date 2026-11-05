@@ -1,0 +1,35 @@
+[build-system]
+requires = ["maturin==1.16.0"]
+build-backend = "maturin"
+
+[project]
+name = "boko-ebook"
+authors = [
+    { name = "yshalsager", email = "contact@yshalsager.com" }
+]
+requires-python = ">=3.11"
+description = "Independent Python bindings for Boko, the native Rust ebook converter."
+dynamic = ["version", "readme"]
+license = "GPL-3.0-or-later"
+license-files = ["LICENSE"]
+
+[project.urls]
+Source = "https://github.com/yshalsager/boko-python"
+"Boko (Rust library)" = "https://github.com/zacharydenton/boko"
+
+[tool.uv]
+cache-keys = [
+    { file = "pyproject.toml" },
+    { file = "Cargo.toml" },
+    { file = "Cargo.lock" },
+    { file = "src/**/*.rs" },
+    { file = "boko.pyi" },
+    { file = "README.md" },
+    { file = "LICENSE" },
+]
+
+[tool.maturin]
+bindings = "pyo3"
+module-name = "boko"
+strip = true
+locked = true

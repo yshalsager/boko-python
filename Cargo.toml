@@ -1,0 +1,30 @@
+[package]
+name = "boko-python"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.91"
+description = "Python bindings for the Boko ebook converter"
+license = "GPL-3.0-or-later"
+readme = "README.md"
+repository = "https://github.com/yshalsager/boko-python"
+exclude = ["/dist"]
+
+[lib]
+name = "boko"
+crate-type = ["cdylib"]
+
+[dependencies]
+boko_core = { package = "boko", version = "0.6", default-features = false, features = ["parallel", "optimize-images"] }
+pyo3 = { version = "0.30.1", features = ["abi3-py311"] }
+
+[lints.rust]
+unsafe_code = "warn"
+
+[lints.clippy]
+all = "warn"
+pedantic = "warn"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+overflow-checks = true

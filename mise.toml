@@ -1,0 +1,15 @@
+[tools]
+rust = '1.99.1'
+python = '3.11.13'
+uv = '0.13.7'
+
+[env]
+UV_PYTHON = { value = '{{ tools.python.version }}', tools = true }
+
+[tasks.dev]
+description = 'Build and install the extension into .venv'
+run = 'uv sync'
+
+[tasks.build]
+description = 'Build release wheels from the source distribution in dist/'
+run = 'uv build'
