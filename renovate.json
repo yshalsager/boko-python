@@ -1,0 +1,30 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":rebaseStalePrs",
+    "group:allNonMajor",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "timezone": "Africa/Cairo",
+  "labels": ["dependencies"],
+  "schedule": ["before 5am on saturday"],
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true,
+    "schedule": ["before 5am on saturday"]
+  },
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch", "pin", "digest"],
+      "automerge": true,
+      "minimumReleaseAge": "3 days"
+    },
+    {
+      "description": "Keep development on the oldest supported Python minor",
+      "matchManagers": ["mise"],
+      "matchPackageNames": ["python/cpython"],
+      "allowedVersions": "<3.12"
+    }
+  ]
+}
