@@ -207,7 +207,9 @@ They need no upstream checkout or test-time downloads.
 Additional Rust checks: `cargo fmt --check`,
 `cargo clippy --locked --all-targets -- -D warnings`, and `cargo test --locked --lib`.
 For Rust's embedded-interpreter test, relocatable Python installations may need
-`PYTHONHOME` set to Python's base prefix; importing the extension does not.
+`PYTHONHOME` set to Python's base prefix. On Linux, also add `$PYTHONHOME/lib` to
+`LD_LIBRARY_PATH` so the test executable can load the Python shared library.
+Importing the extension does not require these settings.
 
 Release artifacts go to `dist/`, with the wheel built from the source archive.
 Use release builds when measuring performance.
