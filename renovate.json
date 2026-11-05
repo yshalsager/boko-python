@@ -23,7 +23,7 @@
     {
       "description": "Keep development on the oldest supported Python minor",
       "matchManagers": ["mise"],
-      "matchPackageNames": ["python"],
+      "matchPackageNames": ["python/cpython"],
       "allowedVersions": "<3.12"
     }
   ]
