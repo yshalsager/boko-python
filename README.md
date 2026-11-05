@@ -9,6 +9,9 @@ The Python distribution is **boko-ebook**, imported as **boko**. The first relea
 is not published yet; build locally using the instructions below. The unrelated
 PyPI distribution `boko` uses the same import name: do not install both together.
 
+> [!CAUTION]
+> This project was developed with use of AI assistance.
+
 ## Usage
 
 ```python
