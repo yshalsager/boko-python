@@ -5,12 +5,30 @@ the native Rust ebook converter. This project depends on the published `boko`
 Rust crate; it does not fork or patch the converter and is not maintained
 by the upstream Boko project.
 
-The Python distribution is **boko-ebook**, imported as **boko**. The first release
-is not published yet; build locally using the instructions below. The unrelated
+[![PyPI version](https://img.shields.io/pypi/v/boko-ebook.svg)](https://pypi.org/project/boko-ebook/)
+
+[![GitHub release](https://img.shields.io/github/release/yshalsager/boko-python.svg)](https://github.com/yshalsager/boko-python/releases/)
+[![GitHub Downloads](https://img.shields.io/github/downloads/yshalsager/boko-python/total.svg)](https://github.com/yshalsager/boko-python/releases/latest)
+[![CI](https://img.shields.io/github/actions/workflow/status/yshalsager/boko-python/python.yml?branch=main)](https://github.com/yshalsager/boko-python/actions/workflows/python.yml)
+
+[![Made with Python](https://img.shields.io/badge/Made%20with-Python%203.11%2B-3776AB?style=flat&labelColor=3776AB&logo=python&logoColor=white)](https://www.python.org/)
+[![License](https://img.shields.io/github/license/yshalsager/boko-python.svg)](https://github.com/yshalsager/boko-python/blob/main/LICENSE)
+
+[![GitHub Sponsors](https://img.shields.io/badge/GitHub-Sponsor-EA4AAA?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/yshalsager)
+[![PayPal](https://img.shields.io/badge/PayPal-Donate-00457C?style=flat&labelColor=00457C&logo=PayPal&logoColor=white)](https://www.paypal.me/yshalsager)
+[![Liberapay](https://img.shields.io/badge/Liberapay-Support-F6C915?style=flat&labelColor=F6C915&logo=Liberapay&logoColor=white)](https://liberapay.com/yshalsager)
+
+The Python distribution is **boko-ebook**, imported as **boko**. The unrelated
 PyPI distribution `boko` uses the same import name: do not install both together.
 
 > [!CAUTION]
 > This project was developed with use of AI assistance.
+
+## Installation
+
+```sh
+pip install boko-ebook
+```
 
 ## Usage
 
